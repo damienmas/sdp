@@ -1,0 +1,51 @@
+plugins {
+    id 'com.github.johnrengelman.shadow' version '4.0.3'
+}
+
+apply plugin: "java"
+apply plugin: "application"
+apply plugin: "com.github.johnrengelman.shadow"
+
+
+mainClassName = "com.dellemc.desdp.demo.SongPlayGeneratorCli"
+archivesBaseName = 'music-demo'
+
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
+
+
+repositories {
+    mavenLocal()
+    mavenCentral()
+    jcenter()
+    maven {
+        url "https://oss.jfrog.org/jfrog-dependencies"
+    }
+}
+
+dependencies {
+    compile "io.pravega:pravega-connectors-flink-${flinkShortVersion}_${flinkScalaVersion}:${pravegaFlinkConnectorVersion}"
+    compile "org.apache.flink:flink-streaming-java_${flinkScalaVersion}:${flinkVersion}"
+    compile "org.apache.flink:flink-streaming-scala_${flinkScalaVersion}:${flinkVersion}"
+    compile "org.apache.flink:flink-ml_${flinkScalaVersion}:${flinkVersion}"
+    compile "org.apache.flink:flink-table_${flinkScalaVersion}:${flinkVersion}"
+    //compile group: 'org.apache.flink', name: 'flink-json', version: flinkVersion
+    compile "org.apache.flink:flink-connector-elasticsearch6_${flinkScalaVersion}:${flinkVersion}"
+    compile "org.elasticsearch.client:elasticsearch-rest-high-level-client:6.5.4"
+    compile "commons-validator:commons-validator:1.6"
+    compile "io.pravega:pravega-client:${pravegaVersion}"
+    if (includePravegaCredentials.toBoolean()) {
+        compile "io.pravega:pravega-keycloak-client:${pravegaCredentialsVersion}"
+    }
+    compile "org.slf4j:slf4j-api:${slf4jApiVersion}"
+    compile "commons-cli:commons-cli:1.4"
+    compile "org.apache.flink:flink-streaming-java_${flinkScalaVersion}:${flinkVersion}"
+    runtime "ch.qos.logback:logback-classic:1.2.3"
+    compile "com.fasterxml.jackson.core:jackson-databind:2.9.1"
+    testImplementation "org.junit.jupiter:junit-jupiter:5.5.2"
+    testCompile "io.pravega:pravega-standalone:${pravegaVersion}"
+}
+
+shadowJar {
+    zip64 true
+}
